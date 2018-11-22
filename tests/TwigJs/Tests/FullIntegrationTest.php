@@ -3,8 +3,7 @@
 namespace TwigJs\Tests;
 
 use DNode\DNode;
-use Exception;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use React;
 use React\EventLoop\StreamSelectLoop;
 use RecursiveDirectoryIterator;
@@ -19,7 +18,7 @@ use Twig_Loader_Array;
 use Twig_Loader_Chain;
 use Twig_Loader_Filesystem;
 
-class FullIntegrationTest extends PHPUnit_Framework_TestCase
+class FullIntegrationTest extends TestCase
 {
     /**
      * @var StreamSelectLoop

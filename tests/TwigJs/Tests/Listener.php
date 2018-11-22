@@ -3,15 +3,16 @@ namespace TwigJs\Tests;
 
 use DNode\DNode;
 use Exception;
-use PHPUnit_Framework_AssertionFailedError;
-use PHPUnit_Framework_Test;
-use PHPUnit_Framework_TestListener;
-use PHPUnit_Framework_TestSuite;
+use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\Test;
+use PHPUnit\Framework\TestListener;
+use PHPUnit\Framework\TestSuite;
+use PHPUnit\Framework\Warning;
 use React;
 use React\EventLoop\StreamSelectLoop;
 use TwigJs;
 
-class Listener implements PHPUnit_Framework_TestListener
+class Listener implements TestListener
 {
     /**
      * @var StreamSelectLoop
@@ -23,8 +24,7 @@ class Listener implements PHPUnit_Framework_TestListener
      */
     private $dnode;
 
-
-    public function startTest(PHPUnit_Framework_Test $test)
+    public function startTest(Test $test): void
     {
         if ($test instanceof TwigJs\Tests\FullIntegrationTest) {
             $this->loop = new StreamSelectLoop();
@@ -33,7 +33,7 @@ class Listener implements PHPUnit_Framework_TestListener
         }
     }
 
-    public function endTestSuite(PHPUnit_Framework_TestSuite $suite)
+    public function endTestSuite(TestSuite $suite): void
     {
         if (isset($this->dnode)) {
             $exit = function ($remote, $connection) {
@@ -53,31 +53,35 @@ class Listener implements PHPUnit_Framework_TestListener
         }
     }
 
-    public function addError(PHPUnit_Framework_Test $test, Exception $e, $time)
+    public function addError(Test $test, \Throwable $t, float $time): void
     {
     }
 
-    public function addFailure(PHPUnit_Framework_Test $test, PHPUnit_Framework_AssertionFailedError $e, $time)
+    public function addWarning(Test $test, Warning $e, float $time): void
     {
     }
 
-    public function addIncompleteTest(PHPUnit_Framework_Test $test, Exception $e, $time)
+    public function addFailure(Test $test, AssertionFailedError $e, float $time): void
     {
     }
 
-    public function addRiskyTest(PHPUnit_Framework_Test $test, Exception $e, $time)
+    public function addIncompleteTest(Test $test, \Throwable $t, float $time): void
     {
     }
 
-    public function addSkippedTest(PHPUnit_Framework_Test $test, Exception $e, $time)
+    public function addRiskyTest(Test $test, \Throwable $t, float $time): void
     {
     }
 
-    public function startTestSuite(PHPUnit_Framework_TestSuite $suite)
+    public function addSkippedTest(Test $test, \Throwable $t, float $time): void
     {
     }
 
-    public function endTest(PHPUnit_Framework_Test $test, $time)
+    public function startTestSuite(TestSuite $suite): void
+    {
+    }
+
+    public function endTest(Test $test, float $time): void
     {
     }
 }
