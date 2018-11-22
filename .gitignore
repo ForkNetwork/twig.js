@@ -5,3 +5,4 @@ config.php
 vendor/
 tmp/
 node_modules/
+composer.lock
