@@ -1,30 +1,39 @@
 {
-    "name": "jms/twig-js",
+    "name": "forknetwork/twig-js",
     "type": "library",
     "description": "twig.js, flexible, secure, and high-performance templating engine for Javascript",
     "keywords": ["templating"],
     "license": "Apache2",
     "authors": [
         {
+            "name": "Rolf Babijn",
+            "email": "mailrolf@gmail.com"
+        },
+        {
             "name": "Johannes M. Schmitt",
-            "email": "schmittjoh@gmail.com"
+            "email": "schmittjoh@gmail.com",
+            "role": "Legacy developer"
         }
     ],
     "require": {
         "php": ">=5.3.2",
         "twig/twig": "^1.25"
     },
-
     "require-dev": {
-        "dnode/dnode": "dev-master",
-        "phpunit/phpunit": "3.7.*@dev",
-        "squizlabs/php_codesniffer": "1.*"
+        "dnode/dnode": "~0.2",
+        "phpunit/phpunit": "~4.5",
+        "squizlabs/php_codesniffer": "~1.0"
     },
-
+    "replace": {
+        "jms/twig-js": "*"
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
-        "psr-0": { "TwigJs": "src/" }
+        "psr-4": { "TwigJs\\": "src/TwigJs/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "TwigJs\\Tests\\": "tests//TwigJs/Tests/" }
     },
     "extra": {
         "branch-alias": {
