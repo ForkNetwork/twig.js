@@ -46,7 +46,7 @@ class FunctionCompiler implements TypeCompilerInterface
                     'The function "%s" does not exist',
                     $node->getAttribute('name')
                 ),
-                $node->getLine()
+                $node->getTemplateLine()
             );
         }
 

@@ -37,7 +37,7 @@ class MacroCallCompiler implements TypeCompilerInterface
                         'Positional arguments cannot be used after named arguments for macro "%s".',
                         $node->getAttribute('name')
                     ),
-                    $node->getLine()
+                    $node->getTemplateLine()
                 );
             } else {
                 $positionalCount++;

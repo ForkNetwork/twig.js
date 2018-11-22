@@ -7,6 +7,9 @@ use TwigJs\Twig\TwigJsExtension;
 
 class IntegrationTest extends TestCase
 {
+    /**
+     * @throws \Twig_Error_Syntax
+     */
     public function testNameIsSetOnModule()
     {
         $env = $this->getEnv();
@@ -18,6 +21,9 @@ class IntegrationTest extends TestCase
         $this->assertEquals(0, count($module->getNode('body')));
     }
 
+    /**
+     * @return \Twig_Environment
+     */
     private function getEnv()
     {
         $arrayLoader = new \Twig_Loader_Array();

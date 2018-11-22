@@ -2,7 +2,6 @@
 namespace TwigJs\Tests;
 
 use DNode\DNode;
-use Exception;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestListener;
@@ -10,7 +9,6 @@ use PHPUnit\Framework\TestSuite;
 use PHPUnit\Framework\Warning;
 use React;
 use React\EventLoop\StreamSelectLoop;
-use TwigJs;
 
 class Listener implements TestListener
 {
@@ -24,15 +22,22 @@ class Listener implements TestListener
      */
     private $dnode;
 
+    /**
+     * @param Test $test
+     */
     public function startTest(Test $test): void
     {
-        if ($test instanceof TwigJs\Tests\FullIntegrationTest) {
+        if ($test instanceof FullIntegrationTest) {
             $this->loop = new StreamSelectLoop();
             $this->dnode = new DNode($this->loop);
             $test->setDnode($this->dnode, $this->loop);
         }
     }
 
+    /**
+     * @param TestSuite $suite
+     * @throws \Exception
+     */
     public function endTestSuite(TestSuite $suite): void
     {
         if (isset($this->dnode)) {

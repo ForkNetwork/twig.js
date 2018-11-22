@@ -31,10 +31,7 @@ class TwigJsTokenParser extends \Twig_TokenParser
             throw new \Twig_Error_Syntax(
                 sprintf(
                     'Unexpected token "%s" of value "%s"',
-                    \Twig_Token::typeToEnglish(
-                        $token->getType(),
-                        $token->getLine()
-                    ),
+                    \Twig_Token::typeToEnglish($token->getType()),
                     $token->getValue()
                 ),
                 $token->getLine()

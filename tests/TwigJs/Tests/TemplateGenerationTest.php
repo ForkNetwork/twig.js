@@ -10,12 +10,16 @@ use TwigJs\JsCompiler;
 class TemplateGenerationTest extends TestCase
 {
     /**
-     * @dataProvider getGenerationTests
+     * @dataProvider providesGenerationTests()
+     *
+     * @param string $inputFile
+     * @param string $outputFile
+     * @throws \Twig_Error_Syntax
      */
-    public function testGenerate($inputFile, $outputFile)
+    public function testGenerate(string $inputFile, string $outputFile): void
     {
-        $this->arrayLoader = new Twig_Loader_Array(array());
-        $env = new \Twig_Environment($this->arrayLoader);
+        $arrayLoader = new Twig_Loader_Array(array());
+        $env = new \Twig_Environment($arrayLoader);
         $env->addExtension(new TwigJsExtension());
         $env->setLoader(new \Twig_Loader_Filesystem(__DIR__.'/Fixture/templates'));
         $env->setCompiler(new JsCompiler($env));
@@ -29,7 +33,10 @@ class TemplateGenerationTest extends TestCase
         );
     }
 
-    public function getGenerationTests()
+    /**
+     * @return array
+     */
+    public function providesGenerationTests(): array
     {
         $tests = array();
         $files = new \RecursiveDirectoryIterator(

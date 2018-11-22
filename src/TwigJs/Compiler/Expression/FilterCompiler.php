@@ -41,7 +41,7 @@ class FilterCompiler implements TypeCompilerInterface
 
         $name = $node->getNode('filter')->getAttribute('value');
         if (false === $filter = $compiler->getEnvironment()->getFilter($name)) {
-            throw new \Twig_Error_Syntax(sprintf('The filter "%s" does not exist', $name), $node->getLine());
+            throw new \Twig_Error_Syntax(sprintf('The filter "%s" does not exist', $name), $node->getTemplateLine());
         }
 
         if (($filterCompiler = $compiler->getFilterCompiler($name))

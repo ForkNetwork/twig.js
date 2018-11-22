@@ -28,7 +28,7 @@ class NullCompiler implements TypeCompilerInterface
                 $node->getNode('node'),
                 $node->getAttribute('name'),
                 $node->hasNode('arguments') ? $node->getNode('arguments') : null,
-                $node->getLine()
+                $node->getTemplateLine()
             )
         );
     }

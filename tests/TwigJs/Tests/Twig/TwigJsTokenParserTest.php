@@ -7,6 +7,9 @@ use TwigJs\Twig\TwigJsTokenParser;
 
 class TwigJsTokenParserTest extends TestCase
 {
+    /**
+     * @throws \Twig_Error_Syntax
+     */
     public function testParse()
     {
         $env = $this->getEnv();
@@ -18,6 +21,9 @@ class TwigJsTokenParserTest extends TestCase
         $this->assertEquals('foo', $token->getAttribute('name'));
     }
 
+    /**
+     * @return \Twig_Environment
+     */
     private function getEnv()
     {
         $arrayLoader = new \Twig_Loader_Array();
