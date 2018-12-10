@@ -319,6 +319,9 @@ class JsCompiler extends \Twig_Compiler
 
     public function compile(\Twig_Node $node, $indentation = 0)
     {
+        // Call parent with an empty node in order to clear the previously compiled template.
+        parent::compile(new \Twig_Node(), $indentation);
+
         $this->subcompile($node);
         return $this;
     }

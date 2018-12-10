@@ -50,7 +50,7 @@ class CompileRequestHandler
         try {
             $source = $request->getSource();
             if (is_string($source)) {
-                $source = new \Twig_Source($source, 'inline');
+                $source = new \Twig_Source($source, $request->getName());
             }
             $compiled = $this->env->compileSource($source);
             if ($curCompiler) {
