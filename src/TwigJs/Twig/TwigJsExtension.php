@@ -2,7 +2,9 @@
 
 namespace TwigJs\Twig;
 
-class TwigJsExtension extends \Twig_Extension
+use Twig\Extension\AbstractExtension;
+
+class TwigJsExtension extends AbstractExtension
 {
     public function getTokenParsers()
     {

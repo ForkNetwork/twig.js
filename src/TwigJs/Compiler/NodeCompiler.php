@@ -18,6 +18,7 @@
 
 namespace TwigJs\Compiler;
 
+use Twig\Node\Node;
 use TwigJs\JsCompiler;
 use TwigJs\TypeCompilerInterface;
 
@@ -25,10 +26,10 @@ class NodeCompiler implements TypeCompilerInterface
 {
     public function getType()
     {
-        return 'Twig_Node';
+        return 'Twig\Node\Node';
     }
 
-    public function compile(JsCompiler $compiler, \Twig_Node $node)
+    public function compile(JsCompiler $compiler, Node $node)
     {
         foreach ($node as $subNode) {
             $compiler->subcompile($subNode);

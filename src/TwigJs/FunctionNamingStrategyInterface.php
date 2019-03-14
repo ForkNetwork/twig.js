@@ -18,6 +18,8 @@
 
 namespace TwigJs;
 
+use Twig\Node\ModuleNode;
+
 interface FunctionNamingStrategyInterface
 {
     /**
@@ -25,8 +27,8 @@ interface FunctionNamingStrategyInterface
      *
      * The returned string may contain dots, e.g. "foo.bar.baz".
      *
-     * @param  \Twig_Node_Module $module
+     * @param  ModuleNode $module
      * @return string
      */
-    public function getFunctionName(\Twig_Node_Module $module);
+    public function getFunctionName(ModuleNode $module);
 }

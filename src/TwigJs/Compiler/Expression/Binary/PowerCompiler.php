@@ -18,6 +18,7 @@
 
 namespace TwigJs\Compiler\Expression\Binary;
 
+use Twig\Node\Node;
 use TwigJs\JsCompiler;
 use TwigJs\TypeCompilerInterface;
 
@@ -25,15 +26,16 @@ class PowerCompiler implements TypeCompilerInterface
 {
     public function getType()
     {
-        return 'Twig_Node_Expression_Binary_Power';
+        return 'Twig\Node\Expression\Binary\PowerBinary';
     }
 
-    public function compile(JsCompiler $compiler, \Twig_Node $node)
+    public function compile(JsCompiler $compiler, Node $node)
     {
-        if (!$node instanceof \Twig_Node_Expression_Binary_Power) {
+        if (!$node instanceof \Twig\Node\Expression\Binary\PowerBinary) {
             throw new \RuntimeException(
                 sprintf(
-                    '$node must be an instanceof of \Twig_Node_Expression_Binary_Power, but got "%s".',
+                    '$node must be an instanceof of %s, but got "%s".',
+                    $this->getType(),
                     get_class($node)
                 )
             );

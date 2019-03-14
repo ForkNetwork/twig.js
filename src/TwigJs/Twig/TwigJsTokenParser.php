@@ -2,9 +2,17 @@
 
 namespace TwigJs\Twig;
 
-class TwigJsTokenParser extends \Twig_TokenParser
+use Twig\Error\SyntaxError;
+use Twig\Parser;
+use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
+
+/**
+ * @property Parser $parser
+ */
+class TwigJsTokenParser extends AbstractTokenParser
 {
-    public function parse(\Twig_Token $token)
+    public function parse(Token $token)
     {
         $node = new TwigJsNode(
             array(),
@@ -14,13 +22,13 @@ class TwigJsTokenParser extends \Twig_TokenParser
         );
 
         $stream = $this->parser->getStream();
-        while (!$stream->test(\Twig_Token::BLOCK_END_TYPE)) {
-            if ($stream->test(\Twig_Token::NAME_TYPE, 'name')) {
+        while (!$stream->test(Token::BLOCK_END_TYPE)) {
+            if ($stream->test(Token::NAME_TYPE, 'name')) {
                 $stream->next();
-                $stream->expect(\Twig_Token::OPERATOR_TYPE, '=');
+                $stream->expect(Token::OPERATOR_TYPE, '=');
                 $node->setAttribute(
                     'name',
-                    $stream->expect(\Twig_Token::STRING_TYPE)->getValue()
+                    $stream->expect(Token::STRING_TYPE)->getValue()
                 );
 
                 continue;
@@ -28,17 +36,17 @@ class TwigJsTokenParser extends \Twig_TokenParser
 
             $token = $stream->getCurrent();
 
-            throw new \Twig_Error_Syntax(
+            throw new SyntaxError(
                 sprintf(
                     'Unexpected token "%s" of value "%s"',
-                    \Twig_Token::typeToEnglish($token->getType()),
+                    Token::typeToEnglish($token->getType()),
                     $token->getValue()
                 ),
                 $token->getLine()
             );
         }
 
-        $stream->expect(\Twig_Token::BLOCK_END_TYPE);
+        $stream->expect(Token::BLOCK_END_TYPE);
 
         return $node;
     }

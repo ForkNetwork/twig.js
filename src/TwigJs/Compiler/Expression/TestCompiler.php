@@ -18,6 +18,7 @@
 
 namespace TwigJs\Compiler\Expression;
 
+use Twig\Node\Node;
 use TwigJs\JsCompiler;
 use TwigJs\TypeCompilerInterface;
 
@@ -25,15 +26,16 @@ class TestCompiler implements TypeCompilerInterface
 {
     public function getType()
     {
-        return 'Twig_Node_Expression_Test';
+        return 'Twig\Node\Expression\TestExpression';
     }
 
-    public function compile(JsCompiler $compiler, \Twig_Node $node)
+    public function compile(JsCompiler $compiler, Node $node)
     {
-        if (!$node instanceof \Twig_Node_Expression_Test) {
+        if (!$node instanceof \Twig\Node\Expression\TestExpression) {
             throw new \RuntimeException(
                 sprintf(
-                    '$node must be an instanceof of \Expression_Test, but got "%s".',
+                    '$node must be an instanceof of %s, but got "%s".',
+                    $this->getType(),
                     get_class($node)
                 )
             );

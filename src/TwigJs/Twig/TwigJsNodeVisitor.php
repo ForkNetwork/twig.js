@@ -2,20 +2,27 @@
 
 namespace TwigJs\Twig;
 
-class TwigJsNodeVisitor implements \Twig_NodeVisitorInterface
+use Twig\Environment;
+use Twig\Node\Node;
+use Twig\NodeVisitor\NodeVisitorInterface;
+
+class TwigJsNodeVisitor implements NodeVisitorInterface
 {
+    /**
+     * @var TwigJsNode
+     */
     private $moduleNode;
 
-    public function enterNode(\Twig_Node $node, \Twig_Environment $env)
+    public function enterNode(Node $node, Environment $env)
     {
-        if ($node instanceof \Twig_Node_Module) {
+        if ($node instanceof \Twig\Node\ModuleNode) {
             return $this->moduleNode = $node;
         }
 
         return $node;
     }
 
-    public function leaveNode(\Twig_Node $node, \Twig_Environment $env)
+    public function leaveNode(Node $node, Environment $env)
     {
         if ($node instanceof TwigJsNode) {
             if ($node->hasAttribute('name')) {

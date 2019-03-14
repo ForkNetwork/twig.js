@@ -18,6 +18,7 @@
 
 namespace TwigJs\Compiler\Expression\Binary;
 
+use Twig\Node\Node;
 use TwigJs\Compiler\Expression\BinaryCompiler;
 use TwigJs\JsCompiler;
 
@@ -25,15 +26,16 @@ class NotEqualCompiler extends BinaryCompiler
 {
     public function getType()
     {
-        return 'Twig_Node_Expression_Binary_NotEqual';
+        return 'Twig\Node\Expression\Binary\NotEqualBinary';
     }
 
-    protected function operator(JsCompiler $compiler, \Twig_Node $node)
+    protected function operator(JsCompiler $compiler, Node $node)
     {
-        if (!$node instanceof \Twig_Node_Expression_Binary_NotEqual) {
+        if (!$node instanceof \Twig\Node\Expression\Binary\NotEqualBinary) {
             throw new \RuntimeException(
                 sprintf(
-                    '$node must be an instanceof of \Twig_Node_Expression_Binary_NotEqual, but got "%s".',
+                    '$node must be an instanceof of %s, but got "%s".',
+                    $this->getType(),
                     get_class($node)
                 )
             );

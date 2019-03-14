@@ -18,6 +18,10 @@
 
 namespace TwigJs;
 
+use Twig\Compiler as TwigCompiler;
+use Twig\Environment;
+use Twig\Node\ModuleNode;
+use Twig\Node\Node;
 use TwigJs\Compiler\MacroCompiler;
 use TwigJs\Compiler\Test\SameAsCompiler;
 use TwigJs\Compiler\Test\OddCompiler;
@@ -30,15 +34,11 @@ use TwigJs\Compiler\Test\DefinedCompiler;
 use TwigJs\Compiler\ImportCompiler;
 use TwigJs\Compiler\AutoEscapeCompiler;
 use TwigJs\Compiler\Expression\TempNameCompiler;
-use TwigJs\Compiler\SetTempCompiler;
-use TwigJs\Compiler\ExtensionReferenceCompiler;
 use TwigJs\Compiler\BlockReferenceCompiler;
-use TwigJs\Compiler\Expression\DefaultFilterCompiler;
 use TwigJs\Compiler\BodyCompiler;
 use TwigJs\Compiler\SetCompiler;
 use TwigJs\Compiler\SpacelessCompiler;
 use TwigJs\Compiler\IncludeCompiler;
-use TwigJs\Compiler\Expression\ExtensionReferenceCompiler as ExpressionExtensionReferenceCompiler;
 use TwigJs\Compiler\Expression\ConditionalCompiler;
 use TwigJs\Compiler\Expression\ArrayCompiler;
 use TwigJs\Compiler\Expression\FunctionCompiler;
@@ -84,7 +84,7 @@ use TwigJs\Compiler\TextCompiler;
 use TwigJs\Compiler\NodeCompiler;
 use TwigJs\Compiler\ModuleCompiler;
 
-class JsCompiler extends \Twig_Compiler
+class JsCompiler extends TwigCompiler
 {
     /** Whether the current expression is a template name */
     public $isTemplateName = false;
@@ -108,79 +108,73 @@ class JsCompiler extends \Twig_Compiler
     private $filterFunctions;
     private $functionMap;
 
-    public function __construct(\Twig_Environment $env)
+    public function __construct(Environment $env)
     {
         parent::__construct($env);
 
         $this->typeCompilers = array(
-            'Twig_Node' => new NodeCompiler(),
-            'Twig_Node_Body' => new BodyCompiler(),
-            'Twig_Node_Module' => new ModuleCompiler\GoogleCompiler(),
-            'Twig_Node_Block' => new BlockCompiler(),
-            'Twig_Node_Text' => new TextCompiler(),
-            'Twig_Node_If' => new IfCompiler(),
-            'Twig_Node_Print' => new PrintCompiler(),
-            'Twig_Node_For' => new ForCompiler(),
-            'Twig_Node_ForLoop' => new ForLoopCompiler(),
-            'Twig_Node_Set' => new SetCompiler(),
-            'Twig_Node_Include' => new IncludeCompiler(),
-            'Twig_Node_Spaceless' => new SpacelessCompiler(),
-            'Twig_Node_SetTemp' => new SetTempCompiler(),
-            'Twig_Node_ExtensionReference' => new ExtensionReferenceCompiler(),
-            'Twig_Node_BlockReference' => new BlockReferenceCompiler(),
-            'Twig_Node_AutoEscape' => new AutoEscapeCompiler(),
-            'Twig_Node_Import' => new ImportCompiler(),
-            'Twig_Node_Macro' => new MacroCompiler(),
-            'Twig_Node_Expression_TempName' => new TempNameCompiler(),
-            'Twig_Node_Expression_DefaultFilter' => new DefaultFilterCompiler(),
-            'Twig_Node_Expression_ExtensionReference' => new ExpressionExtensionReferenceCompiler(),
-            'Twig_Node_Expression_Conditional' => new ConditionalCompiler(),
-            'Twig_Node_Expression_Array' => new ArrayCompiler(),
-            'Twig_Node_Expression_Function' => new FunctionCompiler(),
-            'Twig_Node_Expression_Parent' => new ParentCompiler(),
-            'Twig_Node_Expression_BlockReference' => new ExpressionBlockReferenceCompiler(),
-            'Twig_Node_Expression_AssignName' => new AssignNameCompiler(),
-            'Twig_Node_Expression_Test' => new TestCompiler(),
-            'Twig_Node_Expression_Name' => new NameCompiler(),
-            'Twig_Node_Expression_Filter' => new FilterCompiler(),
-            'Twig_Node_Expression_Filter_Default' => new Compiler\Expression\Filter\DefaultCompiler(),
-            'Twig_Node_Expression_Constant' => new ConstantCompiler(),
-            'Twig_Node_Expression_GetAttr' => new GetAttrCompiler(),
-            'Twig_Node_Expression_MacroCall' => new Compiler\Expression\MacroCallCompiler(),
-            'Twig_Node_Expression_MethodCall' => new Compiler\Expression\MethodCallCompiler(),
-            'Twig_Node_Expression_Binary_Add' => new AddCompiler(),
-            'Twig_Node_Expression_Binary_And' => new AndCompiler(),
-            'Twig_Node_Expression_Binary_BitwiseAnd' => new BitwiseAndCompiler(),
-            'Twig_Node_Expression_Binary_BitwiseOr' => new BitwiseOrCompiler(),
-            'Twig_Node_Expression_Binary_BitwiseXor' => new BitwiseXorCompiler(),
-            'Twig_Node_Expression_Binary_Concat' => new ConcatCompiler(),
-            'Twig_Node_Expression_Binary_Div' => new DivCompiler(),
-            'Twig_Node_Expression_Binary_Equal' => new EqualCompiler(),
-            'Twig_Node_Expression_Binary_FloorDiv' => new FloorDivCompiler(),
-            'Twig_Node_Expression_Binary_Greater' => new GreaterCompiler(),
-            'Twig_Node_Expression_Binary_GreaterEqual' => new GreaterEqualCompiler(),
-            'Twig_Node_Expression_Binary_In' => new InCompiler(),
-            'Twig_Node_Expression_Binary_Less' => new LessCompiler(),
-            'Twig_Node_Expression_Binary_LessEqual' => new LessEqualCompiler(),
-            'Twig_Node_Expression_Binary_Mod' => new ModCompiler(),
-            'Twig_Node_Expression_Binary_Mul' => new MulCompiler(),
-            'Twig_Node_Expression_Binary_NotEqual' => new NotEqualCompiler(),
-            'Twig_Node_Expression_Binary_NotIn' => new NotInCompiler(),
-            'Twig_Node_Expression_Binary_Or' => new OrCompiler(),
-            'Twig_Node_Expression_Binary_Power' => new PowerCompiler(),
-            'Twig_Node_Expression_Binary_Range' => new RangeCompiler(),
-            'Twig_Node_Expression_Binary_Sub' => new SubCompiler(),
-            'Twig_Node_Expression_Unary_Neg' => new NegCompiler(),
-            'Twig_Node_Expression_Unary_Not' => new NotCompiler(),
-            'Twig_Node_Expression_Unary_Pos' => new PosCompiler(),
-            'Twig_Node_Expression_Test_Constant' => new Compiler\Expression\Test\ConstantCompiler(),
-            'Twig_Node_Expression_Test_Defined' => new Compiler\Expression\Test\DefinedCompiler(),
-            'Twig_Node_Expression_Test_Divisibleby' => new Compiler\Expression\Test\DivisiblebyCompiler(),
-            'Twig_Node_Expression_Test_Even' => new Compiler\Expression\Test\EvenCompiler(),
-            'Twig_Node_Expression_Test_Null' => new Compiler\Expression\Test\NullCompiler(),
-            'Twig_Node_Expression_Test_Odd' => new Compiler\Expression\Test\OddCompiler(),
-            'Twig_Node_Expression_Test_Sameas' => new Compiler\Expression\Test\SameasCompiler(),
-
+            'Twig\Node\Node' => new NodeCompiler(),
+            'Twig\Node\BodyNode' => new BodyCompiler(),
+            'Twig\Node\ModuleNode' => new ModuleCompiler\GoogleCompiler(),
+            'Twig\Node\BlockNode' => new BlockCompiler(),
+            'Twig\Node\TextNode' => new TextCompiler(),
+            'Twig\Node\IfNode' => new IfCompiler(),
+            'Twig\Node\PrintNode' => new PrintCompiler(),
+            'Twig\Node\ForNode' => new ForCompiler(),
+            'Twig\Node\ForLoopNode' => new ForLoopCompiler(),
+            'Twig\Node\SetNode' => new SetCompiler(),
+            'Twig\Node\IncludeNode' => new IncludeCompiler(),
+            'Twig\Node\SpacelessNode' => new SpacelessCompiler(),
+            'Twig\Node\BlockReferenceNode' => new BlockReferenceCompiler(),
+            'Twig\Node\AutoEscapeNode' => new AutoEscapeCompiler(),
+            'Twig\Node\ImportNode' => new ImportCompiler(),
+            'Twig\Node\MacroNode' => new MacroCompiler(),
+            'Twig\Node\Expression\TempNameExpression' => new TempNameCompiler(),
+            'Twig\Node\Expression\ConditionalExpression' => new ConditionalCompiler(),
+            'Twig\Node\Expression\ArrayExpression' => new ArrayCompiler(),
+            'Twig\Node\Expression\FunctionExpression' => new FunctionCompiler(),
+            'Twig\Node\Expression\ParentExpression' => new ParentCompiler(),
+            'Twig\Node\Expression\BlockReferenceExpression' => new ExpressionBlockReferenceCompiler(),
+            'Twig\Node\Expression\AssignNameExpression' => new AssignNameCompiler(),
+            'Twig\Node\Expression\TestExpression' => new TestCompiler(),
+            'Twig\Node\Expression\NameExpression' => new NameCompiler(),
+            'Twig\Node\Expression\FilterExpression' => new FilterCompiler(),
+            'Twig\Node\Expression\Filter\DefaultFilter' => new Compiler\Expression\Filter\DefaultCompiler(),
+            'Twig\Node\Expression\ConstantExpression' => new ConstantCompiler(),
+            'Twig\Node\Expression\GetAttrExpression' => new GetAttrCompiler(),
+            'Twig\Node\Expression\MethodCallExpression' => new Compiler\Expression\MethodCallCompiler(),
+            'Twig\Node\Expression\Binary\AddBinary' => new AddCompiler(),
+            'Twig\Node\Expression\Binary\AndBinary' => new AndCompiler(),
+            'Twig\Node\Expression\Binary\BitwiseAndBinary' => new BitwiseAndCompiler(),
+            'Twig\Node\Expression\Binary\BitwiseOrBinary' => new BitwiseOrCompiler(),
+            'Twig\Node\Expression\Binary\BitwiseXorBinary' => new BitwiseXorCompiler(),
+            'Twig\Node\Expression\Binary\ConcatBinary' => new ConcatCompiler(),
+            'Twig\Node\Expression\Binary\DivBinary' => new DivCompiler(),
+            'Twig\Node\Expression\Binary\EqualBinary' => new EqualCompiler(),
+            'Twig\Node\Expression\Binary\FloorDivBinary' => new FloorDivCompiler(),
+            'Twig\Node\Expression\Binary\GreaterBinary' => new GreaterCompiler(),
+            'Twig\Node\Expression\Binary\GreaterEqualBinary' => new GreaterEqualCompiler(),
+            'Twig\Node\Expression\Binary\InBinary' => new InCompiler(),
+            'Twig\Node\Expression\Binary\LessBinary' => new LessCompiler(),
+            'Twig\Node\Expression\Binary\LessEqualBinary' => new LessEqualCompiler(),
+            'Twig\Node\Expression\Binary\ModBinary' => new ModCompiler(),
+            'Twig\Node\Expression\Binary\MulBinary' => new MulCompiler(),
+            'Twig\Node\Expression\Binary\NotEqualBinary' => new NotEqualCompiler(),
+            'Twig\Node\Expression\Binary\NotInBinary' => new NotInCompiler(),
+            'Twig\Node\Expression\Binary\OrBinary' => new OrCompiler(),
+            'Twig\Node\Expression\Binary\PowerBinary' => new PowerCompiler(),
+            'Twig\Node\Expression\Binary\RangeBinary' => new RangeCompiler(),
+            'Twig\Node\Expression\Binary\SubBinary' => new SubCompiler(),
+            'Twig\Node\Expression\Unary\NegUnary' => new NegCompiler(),
+            'Twig\Node\Expression\Unary\NotUnary' => new NotCompiler(),
+            'Twig\Node\Expression\Unary\PosUnary' => new PosCompiler(),
+            'Twig\Node\Expression\Test\ConstantTest' => new Compiler\Expression\Test\ConstantCompiler(),
+            'Twig\Node\Expression\Test\DefinedTest' => new Compiler\Expression\Test\DefinedCompiler(),
+            'Twig\Node\Expression\Test\DivisiblebyTest' => new Compiler\Expression\Test\DivisiblebyCompiler(),
+            'Twig\Node\Expression\Test\EvenTest' => new Compiler\Expression\Test\EvenCompiler(),
+            'Twig\Node\Expression\Test\NullTest' => new Compiler\Expression\Test\NullCompiler(),
+            'Twig\Node\Expression\Test\OddTest' => new Compiler\Expression\Test\OddCompiler(),
+            'Twig\Node\Expression\Test\SameasTest' => new Compiler\Expression\Test\SameasCompiler(),
         );
 
         $this->testCompilers = array(
@@ -251,10 +245,10 @@ class JsCompiler extends \Twig_Compiler
     /**
      * Returns the function name for the given template name.
      *
-     * @param  \Twig_Node_Module $templateName
+     * @param  ModuleNode $module
      * @return string
      */
-    final public function getFunctionName(\Twig_Node_Module $module)
+    final public function getFunctionName(ModuleNode $module)
     {
         if (null === $this->functionNamingStrategy) {
             $this->functionNamingStrategy = new DefaultFunctionNamingStrategy();
@@ -317,18 +311,19 @@ class JsCompiler extends \Twig_Compiler
             $this->functionMap[$twigFunctionName] : null;
     }
 
-    public function compile(\Twig_Node $node, $indentation = 0)
+    public function compile(Node $node, $indentation = 0)
     {
         // Call parent with an empty node in order to clear the previously compiled template.
-        parent::compile(new \Twig_Node(), $indentation);
+        parent::compile(new Node, $indentation);
 
         $this->subcompile($node);
         return $this;
     }
 
-    public function subcompile(\Twig_Node $node, $raw = true)
+    public function subcompile(Node $node, $raw = true)
     {
-        if ($node instanceof \Twig_Profiler_Node_EnterProfile || $node instanceof \Twig_Profiler_Node_LeaveProfile) {
+        if ($node instanceof \Twig\Profiler\Node\EnterProfileNode
+            || $node instanceof \Twig\Profiler\Node\LeaveProfileNode) {
             return $this;
         }
 

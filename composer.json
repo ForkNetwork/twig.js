@@ -17,7 +17,9 @@
     ],
     "require": {
         "php": "^7.1",
-        "twig/twig": "^2.0"
+        "ext-json": "*",
+
+        "twig/twig": "^2.7.1"
     },
     "require-dev": {
         "dnode/dnode": "~0.2",

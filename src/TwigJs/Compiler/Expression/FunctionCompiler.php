@@ -18,6 +18,8 @@
 
 namespace TwigJs\Compiler\Expression;
 
+use Twig\Error\SyntaxError;
+use Twig\Node\Node;
 use TwigJs\JsCompiler;
 use TwigJs\TypeCompilerInterface;
 
@@ -25,15 +27,16 @@ class FunctionCompiler implements TypeCompilerInterface
 {
     public function getType()
     {
-        return 'Twig_Node_Expression_Function';
+        return 'Twig\Node\Expression\FunctionExpression';
     }
 
-    public function compile(JsCompiler $compiler, \Twig_Node $node)
+    public function compile(JsCompiler $compiler, Node $node)
     {
-        if (!$node instanceof \Twig_Node_Expression_Function) {
+        if (!$node instanceof \Twig\Node\Expression\FunctionExpression) {
             throw new \RuntimeException(
                 sprintf(
-                    '$node must be an instanceof of \Expression_Function, but got "%s".',
+                    '$node must be an instanceof of %s, but got "%s".',
+                    $this->getType(),
                     get_class($node)
                 )
             );
@@ -41,7 +44,7 @@ class FunctionCompiler implements TypeCompilerInterface
 
         $function = $compiler->getEnvironment()->getFunction($node->getAttribute('name'));
         if (false === $function) {
-            throw new \Twig_Error_Syntax(
+            throw new SyntaxError(
                 sprintf(
                     'The function "%s" does not exist',
                     $node->getAttribute('name')

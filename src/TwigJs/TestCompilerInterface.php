@@ -18,8 +18,10 @@
 
 namespace TwigJs;
 
+use Twig\Node\Expression\TestExpression;
+
 interface TestCompilerInterface
 {
     public function getName();
-    public function compile(JsCompiler $compiler, \Twig_Node_Expression_Test $node);
+    public function compile(JsCompiler $compiler, TestExpression $node);
 }

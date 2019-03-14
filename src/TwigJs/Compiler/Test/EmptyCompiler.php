@@ -2,6 +2,7 @@
 
 namespace TwigJs\Compiler\Test;
 
+use Twig\Node\Expression\TestExpression;
 use TwigJs\JsCompiler;
 use TwigJs\TestCompilerInterface;
 
@@ -12,7 +13,7 @@ class EmptyCompiler implements TestCompilerInterface
         return 'empty';
     }
 
-    public function compile(JsCompiler $compiler, \Twig_Node_Expression_Test $node)
+    public function compile(JsCompiler $compiler, TestExpression $node)
     {
         $compiler
             ->raw('twig.empty(')

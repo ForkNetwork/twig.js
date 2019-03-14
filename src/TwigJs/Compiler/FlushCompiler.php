@@ -2,6 +2,7 @@
 
 namespace TwigJs\Compiler;
 
+use Twig\Node\Node;
 use TwigJs\JsCompiler;
 use TwigJs\TypeCompilerInterface;
 
@@ -9,15 +10,16 @@ class FlushCompiler implements TypeCompilerInterface
 {
     public function getType()
     {
-        return 'Twig_Node_Flush';
+        return 'Twig\Node\FlushNode';
     }
 
-    public function compile(JsCompiler $compiler, \Twig_Node $node)
+    public function compile(JsCompiler $compiler, Node $node)
     {
-        if (!$node instanceof \Twig_Node_Flush) {
+        if (!$node instanceof \Twig\Node\FlushNode) {
             throw new \RuntimeException(
                 sprintf(
-                    '$node must be an instanceof of \Twig_Node_Flush, but got "%s".',
+                    '$node must be an instanceof of %s, but got "%s".',
+                    $this->getType(),
                     get_class($node)
                 )
             );

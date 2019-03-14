@@ -18,6 +18,7 @@
 
 namespace TwigJs\Compiler;
 
+use Twig\Node\Node;
 use TwigJs\JsCompiler;
 use TwigJs\TypeCompilerInterface;
 
@@ -25,14 +26,18 @@ class AutoEscapeCompiler implements TypeCompilerInterface
 {
     public function getType()
     {
-        return 'Twig_Node_AutoEscape';
+        return 'Twig\Node\AutoEscapeNode';
     }
 
-    public function compile(JsCompiler $compiler, \Twig_Node $node)
+    public function compile(JsCompiler $compiler, Node $node)
     {
-        if (!$node instanceof \Twig_Node_AutoEscape) {
+        if (!$node instanceof \Twig\Node\AutoEscapeNode) {
             throw new \RuntimeException(
-                sprintf('$node must be an instanceof of \AutoEscape, but got "%s".', get_class($node))
+                sprintf(
+                    '$node must be an instanceof of %s, but got "%s".',
+                    $this->getType(),
+                    get_class($node)
+                )
             );
         }
 

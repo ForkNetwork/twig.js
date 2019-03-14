@@ -2,6 +2,8 @@
 
 namespace TwigJs\Twig;
 
-class TwigJsNode extends \Twig_Node
+use Twig\Node\Node;
+
+class TwigJsNode extends Node
 {
 }

@@ -18,6 +18,7 @@
 
 namespace TwigJs\Compiler;
 
+use Twig\Node\Node;
 use TwigJs\JsCompiler;
 use TwigJs\TypeCompilerInterface;
 
@@ -27,15 +28,16 @@ class ForCompiler implements TypeCompilerInterface
 
     public function getType()
     {
-        return 'Twig_Node_For';
+        return 'Twig\Node\ForNode';
     }
 
-    public function compile(JsCompiler $compiler, \Twig_Node $node)
+    public function compile(JsCompiler $compiler, Node $node)
     {
-        if (!$node instanceof \Twig_Node_For) {
+        if (!$node instanceof \Twig\Node\ForNode) {
             throw new \RuntimeException(
                 sprintf(
-                    '$node must be an instanceof of \For, but got "%s".',
+                    '$node must be an instanceof of %s, but got "%s".',
+                    $this->getType(),
                     get_class($node)
                 )
             );
@@ -151,7 +153,7 @@ class ForCompiler implements TypeCompilerInterface
         $this->count = $count;
     }
 
-    private function hasElseNode(\Twig_Node $node)
+    private function hasElseNode(Node $node)
     {
         if (!$node->hasNode('else')) {
             return false;

@@ -18,6 +18,7 @@
 
 namespace TwigJs\Compiler\Expression;
 
+use Twig\Node\Node;
 use TwigJs\JsCompiler;
 use TwigJs\TypeCompilerInterface;
 
@@ -25,14 +26,18 @@ class ArrayCompiler implements TypeCompilerInterface
 {
     public function getType()
     {
-        return 'Twig_Node_Expression_Array';
+        return 'Twig\Node\Expression\ArrayExpression';
     }
 
-    public function compile(JsCompiler $compiler, \Twig_Node $node)
+    public function compile(JsCompiler $compiler, Node $node)
     {
-        if (!$node instanceof \Twig_Node_Expression_Array) {
+        if (!$node instanceof \Twig\Node\Expression\ArrayExpression) {
             throw new \RuntimeException(
-                sprintf('$node must be an instanceof of \Expression_Array, but got "%s".', get_class($node))
+                sprintf(
+                    '$node must be an instanceof of %s, but got "%s".',
+                    $this->getType(),
+                    get_class($node)
+                )
             );
         }
 
@@ -83,7 +88,7 @@ class ArrayCompiler implements TypeCompilerInterface
     private function hasDynamicKeys(array $pairs)
     {
         foreach ($pairs as $pair) {
-            if (!$pair['key'] instanceof \Twig_Node_Expression_Constant) {
+            if (!$pair['key'] instanceof \Twig\Node\Expression\ConstantExpression) {
                 return true;
             }
         }
@@ -94,7 +99,7 @@ class ArrayCompiler implements TypeCompilerInterface
     private function isList(array $pairs)
     {
         for ($i=0,$c=count($pairs); $i<$c; $i++) {
-            if (!$pairs[$i]['key'] instanceof \Twig_Node_Expression_Constant) {
+            if (!$pairs[$i]['key'] instanceof \Twig\Node\Expression\ConstantExpression) {
                 return false;
             }
 
@@ -106,7 +111,7 @@ class ArrayCompiler implements TypeCompilerInterface
         return true;
     }
 
-    private function getKeyValuePairs(\Twig_Node $node)
+    private function getKeyValuePairs(Node $node)
     {
         $pairs = array();
 

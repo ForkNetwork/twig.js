@@ -18,6 +18,7 @@
 
 namespace TwigJs\Compiler;
 
+use Twig\Node\Node;
 use TwigJs\JsCompiler;
 use TwigJs\TypeCompilerInterface;
 
@@ -25,15 +26,16 @@ class IncludeCompiler implements TypeCompilerInterface
 {
     public function getType()
     {
-        return 'Twig_Node_Include';
+        return 'Twig\Node\IncludeNode';
     }
 
-    public function compile(JsCompiler $compiler, \Twig_Node $node)
+    public function compile(JsCompiler $compiler, Node $node)
     {
-        if (!$node instanceof \Twig_Node_Include) {
+        if (!$node instanceof \Twig\Node\IncludeNode) {
             throw new \RuntimeException(
                 sprintf(
-                    '$node must be an instanceof of \Include, but got "%s".',
+                    '$node must be an instanceof of %s, but got "%s".',
+                    $this->getType(),
                     get_class($node)
                 )
             );
@@ -42,7 +44,7 @@ class IncludeCompiler implements TypeCompilerInterface
         $compiler->addDebugInfo($node);
 
         $compiler->isTemplateName = true;
-        if ($node->getNode('expr') instanceof Twig_Node_Expression_Constant) {
+        if ($node->getNode('expr') instanceof \Twig\Node\Expression\ConstantExpression) {
             $compiler
                 ->write("(new ")
                 ->subcompile($node->getNode('expr'))
@@ -78,7 +80,7 @@ class IncludeCompiler implements TypeCompilerInterface
         $compiler->raw(");\n");
     }
 
-    private function hasVariablesNode(\Twig_Node $node)
+    private function hasVariablesNode(Node $node)
     {
         if (!$node->hasNode('variables')) {
             return false;

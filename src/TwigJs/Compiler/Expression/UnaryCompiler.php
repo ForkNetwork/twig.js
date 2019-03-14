@@ -18,17 +18,18 @@
 
 namespace TwigJs\Compiler\Expression;
 
+use Twig\Node\Node;
 use TwigJs\JsCompiler;
 use TwigJs\TypeCompilerInterface;
 
 abstract class UnaryCompiler implements TypeCompilerInterface
 {
-    public function compile(JsCompiler $compiler, \Twig_Node $node)
+    public function compile(JsCompiler $compiler, Node $node)
     {
-        if (!$node instanceof \Twig_Node_Expression_Unary) {
+        if (!$node instanceof \Twig\Node\Expression\Unary\AbstractUnary) {
             throw new \RuntimeException(
                 sprintf(
-                    '$node must be an instanceof of \Expression_Unary, but got "%s".',
+                    '$node must be an instanceof of \Twig\Node\Expression\Unary\AbstractUnary, but got "%s".',
                     get_class($node)
                 )
             );
@@ -42,5 +43,5 @@ abstract class UnaryCompiler implements TypeCompilerInterface
         ;
     }
 
-    abstract protected function operator(JsCompiler $compiler, \Twig_Node $node);
+    abstract protected function operator(JsCompiler $compiler, Node $node);
 }
